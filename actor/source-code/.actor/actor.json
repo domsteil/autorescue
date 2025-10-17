@@ -1,0 +1,13 @@
+{
+  "actorSpecification": 1,
+  "buildTag": "latest",
+  "description": "Scan carrier or policy endpoints and emit AutoRescue-ready delay incidents.",
+  "dockerfile": "../Dockerfile",
+  "input": "./input_schema.json",
+  "meta": {
+    "templateId": "python-start"
+  },
+  "name": "autorescue-carrier-monitor",
+  "title": "AutoRescue carrier delay monitor",
+  "version": "0.0"
+}

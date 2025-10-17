@@ -1,0 +1,14 @@
+{
+  "incidentId": "INC-784512",
+  "type": "shipment_delay",
+  "orderId": "ORD-1001",
+  "detectedAt": "2024-03-18T15:32:10Z",
+  "carrierStatus": {
+    "code": "IN_TRANSIT_DELAYED",
+    "description": "Weather exception at carrier hub",
+    "estimatedDelivery": "2024-03-22T18:00:00Z"
+  },
+  "promisedDeliveryDate": "2024-03-19T20:00:00Z",
+  "delayHours": 48,
+  "source": "apify-actor#carrier-delay-scan"
+}

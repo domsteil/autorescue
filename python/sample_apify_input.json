@@ -1,0 +1,16 @@
+{
+  "url": "https://example.com/carrier/status",
+  "orderId": "ORD-1001",
+  "metadata": {
+    "carrier": "MockExpress",
+    "region": "US"
+  },
+  "sources": [
+    {
+      "url": "https://example.com/carrier/status",
+      "orderId": "ORD-1001",
+      "carrier": "MockExpress",
+      "region": "US"
+    }
+  ]
+}

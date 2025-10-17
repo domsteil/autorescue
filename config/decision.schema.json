@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AutoRescueDecision",
+  "type": "object",
+  "required": ["toolCall", "policyProof"],
+  "properties": {
+    "toolCall": {
+      "type": "object",
+      "required": ["name", "arguments"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": ["create_coupon", "create_refund", "create_reshipment", "manual_review"]
+        },
+        "arguments": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "policyProof": {
+      "type": "string"
+    },
+    "customerMessage": {
+      "type": "string"
+    },
+    "audit": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

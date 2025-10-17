@@ -1,0 +1,18 @@
+{
+  "maxCreditPercentage": 0.2,
+  "maxRefundAmount": 120,
+  "reshipmentSlaHours": 12,
+  "returnlessThreshold": 35,
+  "eligibleSkus": [
+    "A-123-RED",
+    "B-456-BLK",
+    "C-789-BLU"
+  ],
+  "highRiskSkus": [
+    "Z-999-LMT"
+  ],
+  "escalationReasons": [
+    "customer_reported_fraud",
+    "multiple_reships_this_month"
+  ]
+}

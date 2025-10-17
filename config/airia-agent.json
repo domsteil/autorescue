@@ -1,0 +1,30 @@
+{
+  "agentCard": {
+    "projectId": "REPLACE_WITH_PROJECT_ID",
+    "name": "AutoRescue Delay Resolution",
+    "description": "Agent card representing the AutoRescue shipment delay workflow. Update this description with context each time the policy or prompts change.",
+    "url": "https://stateset.com/autorescue",
+    "provider": {
+      "organization": "StateSet AutoRescue",
+      "url": "https://stateset.com"
+    },
+    "version": "1.0.0",
+    "documentationUrl": "https://stateset.com/autorescue/runbook",
+    "capabilities": {
+      "streaming": true,
+      "pushNotifications": false,
+      "stateTransitionHistory": true
+    },
+    "defaultInputModes": [
+      "text"
+    ],
+    "defaultOutputModes": [
+      "json"
+    ]
+  },
+  "deploymentHint": {
+    "projectId": "REPLACE_WITH_PROJECT_ID",
+    "deploymentName": "AutoRescue Delay Workflow",
+    "pipelineId": "REPLACE_WITH_PIPELINE_ID"
+  }
+}

@@ -1,0 +1,189 @@
+{
+  "title": "AutoRescue carrier monitors",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "concurrency": {
+      "type": "integer",
+      "title": "Concurrency",
+      "description": "Maximum number of parallel fetches (1-10).",
+      "minimum": 1,
+      "maximum": 10
+    },
+    "defaultCarrierStatusCode": {
+      "type": "string",
+      "title": "Default carrier status code",
+      "description": "Fallback status code when a delay pattern is detected."
+    },
+    "defaultDelayHours": {
+      "type": "number",
+      "title": "Default delay hours",
+      "description": "Delay used when no estimated delivery is available."
+    },
+    "delayPatterns": {
+      "type": "string",
+      "title": "Delay patterns",
+      "description": "Regular expressions that signal a carrier delay (JSON array or newline separated)."
+    },
+    "ignorePatterns": {
+      "type": "string",
+      "title": "Ignore patterns",
+      "description": "Regular expressions that cancel a detected alert (JSON array or newline separated)."
+    },
+    "minDelayHours": {
+      "type": "number",
+      "title": "Minimum delay hours",
+      "description": "Skip incidents if the computed delay is below this threshold."
+    },
+    "requestHeaders": {
+      "type": "object",
+      "title": "Request headers",
+      "description": "Optional HTTP headers applied to every request."
+    },
+    "requestTimeoutSeconds": {
+      "type": "number",
+      "title": "Request timeout seconds",
+      "description": "Per-request timeout."
+    },
+    "snapshotChars": {
+      "type": "integer",
+      "title": "Snapshot length",
+      "description": "Maximum characters captured from the matched snippet."
+    },
+    "sourceLabel": {
+      "type": "string",
+      "title": "Source label",
+      "description": "Value written to the `source` field on emitted incidents."
+    },
+    "sources": {
+      "type": "array",
+      "title": "Sources",
+      "description": "Carrier or policy endpoints to inspect for AutoRescue signals.",
+      "editor": "select",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "title": "Source",
+        "additionalProperties": false,
+        "required": [
+          "orderId",
+          "url"
+        ],
+        "properties": {
+          "carrier": {
+            "type": "string",
+            "title": "Carrier",
+          "description": "Carrier name recorded in the incident metadata."
+          },
+          "carrierStatusCode": {
+            "type": "string",
+            "title": "Carrier status code",
+          "description": "Override the emitted carrier status code."
+          },
+          "delayHours": {
+            "type": "number",
+            "title": "Override delay hours",
+          "description": "Set a fixed delay window when a pattern matches."
+          },
+          "delayPatterns": {
+            "type": "string",
+            "title": "Delay patterns",
+          "description": "Override delay regex patterns for this source (JSON array or newline separated)."
+          },
+          "etaPaths": {
+            "type": "string",
+            "title": "Estimated delivery JSON paths",
+          "description": "Dotted JSON paths scanned when the response is JSON (JSON array or newline separated)."
+          },
+          "etaSelectors": {
+            "type": "string",
+            "title": "Estimated delivery selectors",
+          "description": "CSS selectors used to find the estimated delivery date (JSON array or newline separated)."
+          },
+          "headers": {
+            "type": "object",
+            "title": "Request headers",
+          "description": "Headers applied only when fetching this URL."
+          },
+          "ignorePatterns": {
+            "type": "string",
+            "title": "Ignore patterns",
+          "description": "Regex patterns that suppress incidents for this source (JSON array or newline separated)."
+          },
+          "incidentId": {
+            "type": "string",
+            "title": "Incident ID",
+          "description": "Provide a stable incident ID to avoid generated hashes."
+          },
+          "metadata": {
+            "type": "object",
+            "title": "Metadata",
+          "description": "Custom metadata to include with the dataset item."
+          },
+          "minDelayHours": {
+            "type": "number",
+            "title": "Minimum delay hours",
+          "description": "Threshold applied to this source before emitting incidents."
+          },
+          "mode": {
+            "type": "string",
+            "title": "Response mode",
+          "description": "Force JSON parsing (`json`) or rely on auto-detection.",
+          "enum": [
+            "auto",
+            "json"
+          ]
+          },
+          "orderId": {
+            "type": "string",
+            "title": "Order ID",
+          "description": "Order identifier forwarded to the workflow."
+          },
+          "promisedDeliveryDate": {
+            "type": "string",
+            "title": "Promised delivery date",
+          "description": "Customer promise date used when computing the delay."
+          },
+          "promisedPaths": {
+            "type": "string",
+            "title": "Promised delivery JSON paths",
+          "description": "JSON paths used when the promise date lives in the payload (JSON array or newline separated)."
+          },
+          "promisedSelectors": {
+            "type": "string",
+            "title": "Promised delivery selectors",
+          "description": "CSS selectors that identify the promised delivery date (JSON array or newline separated)."
+          },
+          "statusPaths": {
+            "type": "string",
+            "title": "Status JSON paths",
+          "description": "JSON paths used to read the carrier status text (JSON array or newline separated)."
+          },
+          "statusSelectors": {
+            "type": "string",
+            "title": "Status selectors",
+          "description": "CSS selectors used to extract the carrier status message (JSON array or newline separated)."
+          },
+          "region": {
+            "type": "string",
+            "title": "Region",
+          "description": "Region identifier forwarded to the workflow."
+          },
+          "sourceLabel": {
+            "type": "string",
+            "title": "Source label",
+          "description": "Override the emitted `source` value for this monitor."
+          },
+          "url": {
+            "type": "string",
+            "title": "URL",
+          "description": "Carrier tracking or policy endpoint to inspect."
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "sources"
+  ]
+}

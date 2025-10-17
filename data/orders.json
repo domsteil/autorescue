@@ -1,0 +1,47 @@
+{
+  "ORD-1001": {
+    "orderId": "ORD-1001",
+    "shopify": {
+      "id": "gid://shopify/Order/1234567890",
+      "status": "OPEN",
+      "fulfillmentStatus": "partial",
+      "financialStatus": "paid"
+    },
+    "customer": {
+      "name": "Jane Rivera",
+      "email": "jane.rivera@example.com",
+      "phone": "+15551234567",
+      "loyaltyTier": "gold"
+    },
+    "lineItems": [
+      {
+        "sku": "A-123-RED",
+        "title": "Travel Duffel",
+        "quantity": 1,
+        "price": 95,
+        "requiresShipping": true
+      },
+      {
+        "sku": "B-456-BLK",
+        "title": "Compression Socks",
+        "quantity": 2,
+        "price": 18,
+        "requiresShipping": true
+      }
+    ],
+    "shipping": {
+      "carrier": "MockExpress",
+      "trackingNumber": "MOCK123456789",
+      "service": "Standard",
+      "address": {
+        "line1": "19 Market Street",
+        "city": "Austin",
+        "state": "TX",
+        "postalCode": "73301",
+        "country": "US"
+      }
+    },
+    "resolutionHistory": [],
+    "lastContactedAt": "2024-03-15T21:13:00Z"
+  }
+}

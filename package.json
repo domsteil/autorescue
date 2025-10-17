@@ -1,0 +1,31 @@
+{
+  "name": "autorescue-workflows",
+  "version": "0.1.0",
+  "description": "AutoRescue orchestration workflows integrating Airia and Apify APIs.",
+  "type": "module",
+  "scripts": {
+    "workflow:run": "node src/index.js",
+    "workflow:apify": "node src/index.js --apify",
+    "airia:setup": "node src/scripts/airiaSetup.js",
+    "server:start": "node apps/server/index.js",
+    "worker:start": "node apps/worker/index.js",
+    "workflow:simulate": "SIMULATE_AIRIA=1 node src/index.js --event ../data/events/sample-delay-event.json --summary",
+    "demo:e2e": "node scripts/e2e-demo.js",
+    "outbox:replay": "node scripts/replay-outbox.js",
+    "decision:report": "node scripts/decision-report.js",
+    "kafka:check": "node scripts/kafka-admin-check.js",
+    "dashboard:start": "node apps/dashboard/index.js",
+    "publish:test-event": "node scripts/publish-test-event.js",
+    "airia:check": "node scripts/check-airia-agent.js",
+    "apify:run": "node scripts/run-apify.js",
+    "airia:test": "node scripts/run-airia-test.js",
+    "airia:bootstrap": "node scripts/setup-airia-assets.js"
+  },
+  "dependencies": {
+    "@sentry/node": "^10.20.0",
+    "kafkajs": "^2.2.4",
+    "express": "^4.19.2",
+    "ajv": "^8.12.0",
+    "dotenv": "^16.3.1"
+  }
+}

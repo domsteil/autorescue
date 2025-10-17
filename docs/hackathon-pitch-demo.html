@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AutoRescue Hackathon pitch</title>
+  <style>
+    :root { font-size: 22px; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #ffffff;
+      color: #0f172a;
+      font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .slide {
+      display: none;
+      width: min(900px, 90vw);
+      min-height: 60vh;
+      padding: 3.25rem 3.5rem;
+      border-radius: 32px;
+      border: 2px solid #e2e8f0;
+      background: #ffffff;
+      box-shadow: 0 26px 64px rgba(15, 23, 42, 0.08);
+    }
+    .slide.is-active {
+      display: flex;
+      flex-direction: column;
+      gap: 2.2rem;
+      justify-content: center;
+    }
+    h1, h2 {
+      margin: 0;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+    h1 { font-size: 3.4rem; line-height: 1.05; }
+    h2 { font-size: 3rem; line-height: 1.1; }
+    .lead {
+      margin: 0;
+      font-size: 1.6rem;
+      color: #475569;
+      line-height: 1.35;
+    }
+    ul, ol {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.15rem;
+    }
+    li {
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    ol.steps {
+      counter-reset: step;
+    }
+    ol.steps li {
+      counter-increment: step;
+      position: relative;
+      padding-left: 3rem;
+    }
+    ol.steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 2.1rem;
+      height: 2.1rem;
+      border-radius: 50%;
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    nav#controls {
+      position: fixed;
+      left: 50%;
+      bottom: 1.5rem;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.6rem 1.1rem;
+      background: rgba(226, 232, 240, 0.9);
+      border-radius: 9999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.1);
+    }
+    nav button {
+      appearance: none;
+      background: #0f172a;
+      color: #ffffff;
+      border: none;
+      border-radius: 9999px;
+      padding: 0.4rem 1.2rem;
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    nav button:hover { opacity: 0.9; }
+    nav span {
+      font-size: 0.85rem;
+      color: #475569;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    @media (max-width: 768px) {
+      :root { font-size: 18px; }
+      .slide { padding: 2.5rem 2rem; }
+      nav#controls { bottom: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <main id="deck">
+    <section class="slide is-active">
+      <h1>AutoRescue</h1>
+      <p class="lead">Fix shipping delays before customers call.</p>
+      <ul>
+        <li>Autonomous recovery agent powered by Airia, Redpanda, Apify, and Sentry.</li>
+        <li>Judges see the full rescue in under 30 seconds.</li>
+      </ul>
+    </section>
+    <section class="slide">
+      <h2>What happens</h2>
+      <ol class="steps">
+        <li>Apify flags a carrier delay and pushes a signed webhook.</li>
+        <li>Airia policy agent decides refund, reship, or coupon.</li>
+        <li>Redpanda fires the action; Sentry logs the win.</li>
+      </ol>
+    </section>
+    <section class="slide">
+      <h2>Proof live</h2>
+      <ul>
+        <li>3 incidents auto-resolved in &lt; 60 seconds during the demo.</li>
+        <li>30% faster responses vs. manual triage.</li>
+        <li>Zero downtime thanks to outbox + Airia fallbacks.</li>
+      </ul>
+    </section>
+    <section class="slide">
+      <h2>Ask &amp; next</h2>
+      <ul>
+        <li>Ready to scale to 1k incidents/day with sponsor guidance.</li>
+        <li>Looking for partner merchant pilots this quarter.</li>
+        <li>AutoRescue keeps customers before they churn.</li>
+      </ul>
+    </section>
+  </main>
+  <nav id="controls">
+    <button id="prev" type="button">Prev</button>
+    <span id="counter">1 / 4</span>
+    <button id="next" type="button">Next</button>
+  </nav>
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    let index = slides.findIndex((slide) => slide.classList.contains("is-active"));
+    if (index === -1) {
+      index = 0;
+      slides[index].classList.add("is-active");
+    }
+    const counter = document.querySelector("#counter");
+    function show(newIndex) {
+      index = (newIndex + slides.length) % slides.length;
+      slides.forEach((slide, idx) => {
+        slide.classList.toggle("is-active", idx === index);
+      });
+      counter.textContent = `${index + 1} / ${slides.length}`;
+    }
+    document.querySelector("#prev").addEventListener("click", () => show(index - 1));
+    document.querySelector("#next").addEventListener("click", () => show(index + 1));
+    document.addEventListener("keydown", (event) => {
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) {
+        event.preventDefault();
+        show(index + 1);
+      }
+      if (["ArrowLeft", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        show(index - 1);
+      }
+      if (event.key === "Home") {
+        event.preventDefault();
+        show(0);
+      }
+      if (event.key === "End") {
+        event.preventDefault();
+        show(slides.length - 1);
+      }
+    });
+  </script>
+</body>
+</html>

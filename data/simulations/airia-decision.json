@@ -1,0 +1,19 @@
+{
+  "agentVersionId": "00000000-0000-0000-0000-000000000000",
+  "toolCall": {
+    "name": "create_coupon",
+    "arguments": {
+      "amountOff": 25,
+      "currency": "USD",
+      "expiresAt": "2024-04-30T00:00:00Z",
+      "reason": "carrier_delay_make_good",
+      "codePrefix": "RESCUE-INC-784512"
+    }
+  },
+  "customerMessage": "Hi Jane, carrier delays pushed your package past the promised date. I can issue a $25 credit for your next order. Reply 1 to accept or 2 for an alternate option.",
+  "policyProof": "Delay > 24h and AOV 95 → credit capped at 20%; selected coupon as refund would exceed $120 limit.",
+  "audit": {
+    "model": "gpt-4o",
+    "latencyMs": 4200
+  }
+}

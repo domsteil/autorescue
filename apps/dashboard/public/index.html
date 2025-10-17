@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AutoRescue dashboard</title>
+  <style>
+    :root {
+      font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+      color: #0f172a;
+      background: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #ffffff;
+      display: flex;
+      justify-content: center;
+      padding: 2.8rem 1.6rem 3.4rem;
+      color: #0f172a;
+    }
+    .layout {
+      width: min(1180px, 100%);
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 1.2rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.9rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    header span {
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+    .stats-row {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    .stat {
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 1.2rem 1.4rem;
+      display: grid;
+      gap: 0.35rem;
+      background: #ffffff;
+    }
+    .stat span:first-child {
+      color: #64748b;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .stat strong {
+      font-size: 2rem;
+      font-weight: 600;
+    }
+    .timeline {
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 1.4rem 1.6rem;
+      display: grid;
+      gap: 1rem;
+      background: #ffffff;
+    }
+    .timeline__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .timeline__header h2 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #64748b;
+    }
+    .timeline__steps {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    .timeline__step {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      display: grid;
+      gap: 0.4rem;
+      background: #ffffff;
+    }
+    .timeline__step[data-status="ok"] {
+      border-color: #0f766e;
+      background: #f0fdfa;
+    }
+    .timeline__step[data-status="error"] {
+      border-color: #b91c1c;
+      background: #fef2f2;
+    }
+    .timeline__step[data-status="not-configured"] {
+      background: #f8fafc;
+    }
+    .timeline__label {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #64748b;
+    }
+    .timeline__metric {
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+    .timeline__status {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+    main {
+      display: grid;
+      gap: 1.5rem;
+    }
+    .cards {
+      display: grid;
+      gap: 1.2rem;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+    .card {
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 1.5rem 1.6rem;
+      display: grid;
+      gap: 1.2rem;
+      background: #ffffff;
+    }
+    .card__header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .card__title {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .badge {
+      padding: 0.25rem 0.55rem;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      font-size: 0.75rem;
+      color: #475569;
+      background: #f8fafc;
+    }
+    .badge.ok {
+      border-color: #0f766e;
+      color: #0f766e;
+      background: #f0fdfa;
+    }
+    .badge.no-data {
+      border-color: #92400e;
+      color: #92400e;
+      background: #fff7ed;
+    }
+    .badge.config-check {
+      border-color: #1d4ed8;
+      color: #1d4ed8;
+      background: #eef2ff;
+    }
+    .badge.not-configured,
+    .badge.error {
+      border-color: #b91c1c;
+      color: #b91c1c;
+      background: #fef2f2;
+    }
+    .card__metrics {
+      display: grid;
+      gap: 0.8rem;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+    .metric {
+      display: grid;
+      gap: 0.2rem;
+    }
+    .metric span:first-child {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+    .metric strong {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    .card__list-title {
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #64748b;
+      margin: 0;
+    }
+    ul.latest {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 0.75rem;
+    }
+    ul.latest li {
+      padding-left: 0.85rem;
+      border-left: 3px solid #e2e8f0;
+      color: #1f2937;
+      font-size: 0.93rem;
+      line-height: 1.45;
+    }
+    ul.latest li strong {
+      color: #0f172a;
+    }
+    .error-msg {
+      color: #b91c1c;
+      font-size: 0.9rem;
+    }
+    footer {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      text-align: right;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 1rem;
+    }
+    @media (max-width: 720px) {
+      body { padding: 2.2rem 1.1rem 3rem; }
+      header { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+      .timeline__steps { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <header>
+      <h1>AutoRescue control center</h1>
+      <span id="updatedAt">Loading latest data…</span>
+    </header>
+    <section class="stats-row">
+      <div class="stat">
+        <span>incidents processed</span>
+        <strong id="statIncidents">—</strong>
+        <span>Apify dataset or outbox</span>
+      </div>
+      <div class="stat">
+        <span>decisions issued</span>
+        <strong id="statDecisions">—</strong>
+        <span>Airia policy agent</span>
+      </div>
+      <div class="stat">
+        <span>pipeline mode</span>
+        <strong id="statPipeline">—</strong>
+        <span id="metaEvent">Awaiting activity</span>
+      </div>
+    </section>
+    <section class="timeline">
+      <div class="timeline__header">
+        <h2>pipeline timeline</h2>
+        <span id="pipelinePulse">Awaiting snapshot…</span>
+      </div>
+      <div class="timeline__steps">
+        <div class="timeline__step" data-service="apify" data-status="not-configured">
+          <span class="timeline__label">step 1 · ingestion</span>
+          <div class="timeline__metric" id="timelineMetricApify">0 incidents</div>
+          <div class="timeline__status" id="timelineStatusApify">Not configured</div>
+        </div>
+        <div class="timeline__step" data-service="airia" data-status="not-configured">
+          <span class="timeline__label">step 2 · policy</span>
+          <div class="timeline__metric" id="timelineMetricAiria">0 decisions</div>
+          <div class="timeline__status" id="timelineStatusAiria">Not configured</div>
+        </div>
+        <div class="timeline__step" data-service="redpanda" data-status="not-configured">
+          <span class="timeline__label">step 3 · streaming</span>
+          <div class="timeline__metric" id="timelineMetricRedpanda">0 messages</div>
+          <div class="timeline__status" id="timelineStatusRedpanda">Not configured</div>
+        </div>
+      </div>
+    </section>
+    <main>
+      <section class="cards" id="cards"></section>
+    </main>
+    <footer>Data sources: Apify incidents · Airia decisions · Redpanda topics.</footer>
+  </div>
+  <script>
+    const cardsEl = document.getElementById('cards');
+    const updatedAtEl = document.getElementById('updatedAt');
+    const metaEventEl = document.getElementById('metaEvent');
+    const statIncidentsEl = document.getElementById('statIncidents');
+    const statDecisionsEl = document.getElementById('statDecisions');
+    const statPipelineEl = document.getElementById('statPipeline');
+    const pipelinePulseEl = document.getElementById('pipelinePulse');
+
+    const timelineElements = {
+      apify: {
+        root: document.querySelector('[data-service="apify"]'),
+        metric: document.getElementById('timelineMetricApify'),
+        status: document.getElementById('timelineStatusApify'),
+      },
+      airia: {
+        root: document.querySelector('[data-service="airia"]'),
+        metric: document.getElementById('timelineMetricAiria'),
+        status: document.getElementById('timelineStatusAiria'),
+      },
+      redpanda: {
+        root: document.querySelector('[data-service="redpanda"]'),
+        metric: document.getElementById('timelineMetricRedpanda'),
+        status: document.getElementById('timelineStatusRedpanda'),
+      },
+    };
+
+    const STATUS_LABELS = {
+      ok: 'Running',
+      'no-data': 'No recent data',
+      'config-check': 'Configured',
+      'not-configured': 'Not configured',
+      error: 'Error',
+    };
+
+    const SERVICE_BLURBS = {
+      apify: (service) =>
+        service.status === 'ok'
+          ? `${service.incidentsProcessed ?? 0} incidents queued`
+          : 'Waiting for incident signal',
+      airia: (service) =>
+        service.status === 'ok'
+          ? `${service.decisionsProcessed ?? 0} decisions ready`
+          : 'Agent configured; awaiting data',
+      redpanda: (service) =>
+        `${service.eventsTopic ?? 'carrier-events'} · ${service.actionsTopic ?? 'actions'}`,
+    };
+
+    const CARD_DEFINITIONS = [
+      {
+        key: 'apify',
+        title: 'Apify incidents',
+        render: (service) => {
+          const latestItems = service.latestIncidents?.slice(0, 3) ?? [];
+          const metrics = [
+            { label: 'Incidents processed', value: service.incidentsProcessed ?? 0 },
+            { label: 'Dataset', value: service.datasetId ?? '—' },
+            { label: 'Latest incident', value: formatTimestamp(latestItems[0]?.detectedAt ?? latestItems[0]?.timestamp) },
+            { label: 'Source', value: (service.source ?? '—').replace(/-/g, ' ') },
+          ];
+          const listItems = latestItems.length
+            ? latestItems.map((item) => `
+                <li>
+                  <strong>${item.orderId ?? 'Unknown order'}</strong><br>
+                  ${item.status ?? 'No status'} · Delay ${item.delayHours ?? '—'}h<br>
+                  <small>${formatTimestamp(item.detectedAt)}</small>
+                </li>
+              `).join('')
+            : '<li>No recent incidents.</li>';
+          const extra = service.apiError
+            ? `<div class="error-msg">API error: ${service.apiError}</div>`
+            : '';
+          return {
+            blurb: SERVICE_BLURBS.apify(service),
+            body: `
+              ${renderMetrics(metrics)}
+              <p class="card__list-title">Latest activity</p>
+              <ul class="latest">${listItems}</ul>
+            `,
+            footer: extra,
+          };
+        },
+      },
+      {
+        key: 'airia',
+        title: 'Airia decisions',
+        render: (service) => {
+          const latestItems = service.latestDecisions?.slice(0, 3) ?? [];
+          const deploymentLabel = service.deployment
+            ? service.deployment.deploymentName ??
+              service.deployment.name ??
+              service.deploymentId ??
+              service.deployment.id ??
+              'Resolved deployment'
+            : service.deploymentId ?? '—';
+          const metrics = [
+            { label: 'Decisions processed', value: service.decisionsProcessed ?? 0 },
+            { label: 'Deployment', value: deploymentLabel },
+            { label: 'Project', value: service.agentProject ?? '—' },
+            { label: 'Connection', value: (service.connectionStatus ?? '—').replace(/-/g, ' ') },
+            { label: 'Agent cards', value: service.agentCardsCount ?? '—' },
+            { label: 'Latest decision', value: formatTimestamp(latestItems[0]?.timestamp) },
+          ];
+          const listItems = latestItems.length
+            ? latestItems.map((item) => `
+                <li>
+                  <strong>${(item.actionType ?? 'unknown').toUpperCase()}</strong> · ${item.summary ?? 'No summary'}<br>
+                  ${item.latencyMs ? `Latency ${(item.latencyMs / 1000).toFixed(1)}s · ` : ''}${item.allowed === false ? 'Policy override' : 'Policy OK'}<br>
+                  <small>${formatTimestamp(item.timestamp)}</small>
+                </li>
+              `).join('')
+            : '<li>No recent decisions.</li>';
+          const extras = [
+            service.apiError ? `<div class="error-msg">Airia API: ${service.apiError}</div>` : '',
+            service.agentCardsError ? `<div class="error-msg">Agent cards: ${service.agentCardsError}</div>` : '',
+          ].filter(Boolean).join('');
+          return {
+            blurb: SERVICE_BLURBS.airia(service),
+            body: `
+              ${renderMetrics(metrics)}
+              <p class="card__list-title">Latest activity</p>
+              <ul class="latest">${listItems}</ul>
+            `,
+            footer: extras,
+          };
+        },
+      },
+      {
+        key: 'redpanda',
+        title: 'Redpanda pipeline',
+        render: (service) => {
+          const metrics = [
+            { label: 'Events topic', value: service.eventsTopic },
+            { label: 'Actions topic', value: service.actionsTopic },
+            { label: 'Events processed', value: service.eventsProcessed ?? 0 },
+            { label: 'Actions processed', value: service.actionsProcessed ?? 0 },
+            { label: 'Mode', value: (service.connectionMode ?? 'unknown').replace(/-/g, ' ') },
+            { label: 'Latest event', value: formatTimestamp(service.latestEventAt) },
+            { label: 'Latest action', value: formatTimestamp(service.latestActionAt) },
+          ];
+          const errors = (service.latestErrors ?? [])
+            .map((item) => `
+              <li>
+                <strong>${item.topic}</strong><br>
+                ${item.error}<br>
+                <small>${formatTimestamp(item.timestamp)}</small>
+              </li>
+            `).join('');
+          const listItems = errors || '<li>No recent broker errors.</li>';
+          return {
+            blurb: SERVICE_BLURBS.redpanda(service),
+            body: `
+              ${renderMetrics(metrics)}
+              <p class="card__list-title">Latest activity</p>
+              <ul class="latest">${listItems}</ul>
+            `,
+            footer: '',
+          };
+        },
+      },
+    ];
+
+    function renderMetrics(metrics = []) {
+      if (!metrics.length) return '';
+      const items = metrics.map((item) => `
+        <div class="metric">
+          <span>${item.label}</span>
+          <strong>${item.value ?? '—'}</strong>
+        </div>
+      `).join('');
+      return `<div class="card__metrics">${items}</div>`;
+    }
+
+    function formatTimestamp(input) {
+      if (!input) return '—';
+      const value = typeof input === 'string' ? new Date(input) : input;
+      if (Number.isNaN(value.getTime())) return input;
+      return value.toLocaleString();
+    }
+
+    function statusClass(status) {
+      const normalized = STATUS_LABELS[status] ? status : 'not-configured';
+      return `badge ${normalized}`;
+    }
+
+    function formatPipelineMode(mode) {
+      return (mode ?? 'unknown')
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, (match) => match.toUpperCase());
+    }
+
+    function updateTimeline(data) {
+      const services = ['apify', 'airia', 'redpanda'];
+      services.forEach((key) => {
+        const service = data[key] ?? {};
+        const el = timelineElements[key];
+        if (!el?.root) return;
+        const status = service.status ?? 'not-configured';
+        el.root.dataset.status = status;
+        if (key === 'apify') {
+          el.metric.textContent = `${service.incidentsProcessed ?? 0} incident${(service.incidentsProcessed ?? 0) === 1 ? '' : 's'}`;
+        } else if (key === 'airia') {
+          el.metric.textContent = `${service.decisionsProcessed ?? 0} decision${(service.decisionsProcessed ?? 0) === 1 ? '' : 's'}`;
+        } else if (key === 'redpanda') {
+          const total = (service.eventsProcessed ?? 0) + (service.actionsProcessed ?? 0);
+          el.metric.textContent = `${total} message${total === 1 ? '' : 's'}`;
+        }
+        el.status.textContent = STATUS_LABELS[status] ?? status;
+      });
+
+      const latestEvent = data.summary?.latestEventAt ? formatTimestamp(data.summary.latestEventAt) : null;
+      const latestAction = data.summary?.latestActionAt ? formatTimestamp(data.summary.latestActionAt) : null;
+      const bits = [];
+      if (latestEvent) bits.push(`event ${latestEvent}`);
+      if (latestAction) bits.push(`action ${latestAction}`);
+      pipelinePulseEl.textContent = bits.length
+        ? `Last touch · ${bits.join(' · ')}`
+        : 'Awaiting activity';
+    }
+
+    async function loadDashboard() {
+      try {
+        const response = await fetch('/api/dashboard', { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error(`Request failed with ${response.status}`);
+        }
+        const data = await response.json();
+        renderDashboard(data);
+      } catch (error) {
+        cardsEl.innerHTML = `
+          <article class="card">
+            <div class="card__header">
+              <h2 class="card__title">Dashboard error</h2>
+              <span class="badge error">Error</span>
+            </div>
+            <div class="error-msg">${error.message}</div>
+          </article>`;
+        updatedAtEl.textContent = 'Last update failed.';
+        metaEventEl.textContent = '';
+        pipelinePulseEl.textContent = 'Awaiting activity';
+        Object.values(timelineElements).forEach(({ root, status }) => {
+          if (root) root.dataset.status = 'error';
+          if (status) status.textContent = 'Error';
+        });
+      }
+    }
+
+    function renderDashboard(data) {
+      updatedAtEl.textContent = `Last updated ${formatTimestamp(data.generatedAt)}`;
+      const summary = data.summary ?? {};
+      statIncidentsEl.textContent = summary.incidentsProcessed ?? 0;
+      statDecisionsEl.textContent = summary.decisionsProcessed ?? 0;
+      statPipelineEl.textContent = formatPipelineMode(summary.pipelineMode);
+      const latestEventMsg = summary.latestEventAt
+        ? `Latest event ${formatTimestamp(summary.latestEventAt)}`
+        : '';
+      const latestActionMsg = summary.latestActionAt
+        ? `Latest action ${formatTimestamp(summary.latestActionAt)}`
+        : '';
+      metaEventEl.textContent = [latestEventMsg, latestActionMsg].filter(Boolean).join(' · ') || 'Awaiting activity';
+
+      updateTimeline(data);
+
+      const cards = CARD_DEFINITIONS.map(({ key, title, render }) => {
+        const service = data[key] ?? {};
+        const statusLabel = STATUS_LABELS[service.status] ?? service.status ?? 'Unknown';
+        const section = render(service);
+        return `
+          <article class="card">
+            <div class="card__header">
+              <div>
+                <h2 class="card__title">${title}</h2>
+                <p>${section.blurb}</p>
+              </div>
+              <span class="${statusClass(service.status)}">${statusLabel}</span>
+            </div>
+            ${section.body}
+            ${section.footer ? `<div class="error-msg">${section.footer}</div>` : ''}
+          </article>
+        `;
+      }).join('');
+
+      cardsEl.innerHTML = cards;
+    }
+
+    loadDashboard();
+    setInterval(loadDashboard, 60_000);
+  </script>
+</body>
+</html>

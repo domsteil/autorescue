@@ -1,0 +1,12 @@
+{
+  "name": "autorescue-apify-actor",
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "apify": "^3.0.1",
+    "got": "^13.0.0"
+  },
+  "scripts": {
+    "start": "node src/main.js"
+  }
+}
